@@ -11,6 +11,11 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract NFTMarketplace is ERC721URIStorage {
 
+  /**
+    * @dev Structs
+  */
+
+
   struct Token {
     uint256 tokenId;
     address payable seller;
@@ -19,11 +24,23 @@ contract NFTMarketplace is ERC721URIStorage {
     bool sold;
   }
 
+
+  /**
+    * @dev Storage Variables
+  */
+
+
   uint256 public _tokenIds;
   uint256 public _itemsSold;
   uint256 public _listingPrice;
   address payable _owner;
   mapping(uint256 => Token) public idToToken;
+
+
+  /**
+    * @dev Events
+  */
+
 
   event TokenCreated(
     uint256 indexed tokenId,
@@ -46,6 +63,11 @@ contract NFTMarketplace is ERC721URIStorage {
     uint256 price
   );
 
+
+  /**
+    * @dev Constructor
+  */
+
   /**
   * @dev Initializes the NFT marketplace contract.
   */
@@ -53,6 +75,12 @@ contract NFTMarketplace is ERC721URIStorage {
     _listingPrice = 0.1 ether;
     _owner = payable(msg.sender);
   }
+
+
+  /**
+    * @dev Modifiers
+  */
+
 
   /**
   * @dev Throws an error if the caller is not the marketplace owner.
@@ -64,6 +92,12 @@ contract NFTMarketplace is ERC721URIStorage {
     );
     _;
   }
+
+
+  /**
+    * @dev Functions
+  */
+
 
   /**
   * @dev Updates the listing price for creating tokens.
