@@ -14,7 +14,6 @@ contract NFTMarketplace is ERC721URIStorage {
     * @dev Structs
   */
 
-
   struct Token {
     uint256 tokenId;
     address payable seller;
@@ -23,11 +22,9 @@ contract NFTMarketplace is ERC721URIStorage {
     bool sold;
   }
 
-
   /**
     * @dev Storage Variables
   */
-
 
   uint256 public _tokenIds;
   uint256 public _itemsSold;
@@ -39,7 +36,6 @@ contract NFTMarketplace is ERC721URIStorage {
   /**
     * @dev Events
   */
-
 
   event TokenCreated(
     uint256 indexed tokenId,
@@ -80,7 +76,6 @@ contract NFTMarketplace is ERC721URIStorage {
     * @dev Modifiers
   */
 
-
   /**
   * @dev Throws an error if the caller is not the marketplace owner.
   */
@@ -96,7 +91,6 @@ contract NFTMarketplace is ERC721URIStorage {
   /**
     * @dev Functions
   */
-
 
   /**
   * @dev Updates the listing price for creating tokens.
