@@ -29,7 +29,7 @@ describe("NFTMarketplace", function () {
   it("should create and list an NFT for sale", async function () {
     
 
-    tokenId = await marketplace._tokenIds();
+    tokenId = await marketplace.tokenIds();
 
     expect(tokenId).to.equal(1);
 
@@ -56,7 +56,7 @@ describe("NFTMarketplace", function () {
   it("should allow to resell an NFT", async function () {
     const newTokenPrice = ethers.parseEther("2.0");
 
-    tokenId = await marketplace._tokenIds();
+    tokenId = await marketplace.tokenIds();
     await marketplace.connect(buyer1).buyToken(tokenId, { value: tokenPrice });
     await marketplace.connect(buyer1).resellToken(tokenId, newTokenPrice, { value: listingPrice });
 
@@ -70,7 +70,7 @@ describe("NFTMarketplace", function () {
 
   it("should fetch unsold tokens", async function () {
     const unsoldTokens = await marketplace.fetchAllUnsoldTokens();
-    tokenId = await marketplace._tokenIds();
+    tokenId = await marketplace.tokenIds();
     expect(unsoldTokens.length).to.equal(tokenId);
     expect(unsoldTokens[0].tokenId).to.equal(tokenId);
     expect(unsoldTokens[0].seller).to.equal(seller.address);
@@ -82,7 +82,7 @@ describe("NFTMarketplace", function () {
 
   it("should fetch tokens purchased by an user", async function () {
 
-    tokenId = await marketplace._tokenIds();
+    tokenId = await marketplace.tokenIds();
     await marketplace.connect(buyer1).buyToken(tokenId, { value: tokenPrice });
     const userTokens = await marketplace.connect(buyer1).fetchTokensOwnedByMe();
 
@@ -96,7 +96,7 @@ describe("NFTMarketplace", function () {
 
   it("should fetch items listed by an user", async function () {
 
-    tokenId = await marketplace._tokenIds();
+    tokenId = await marketplace.tokenIds();
     const userItems = await marketplace.connect(seller).fetchMyListedTokens();
 
     expect(userItems.length).to.equal(1);

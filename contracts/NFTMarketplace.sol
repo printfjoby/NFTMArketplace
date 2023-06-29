@@ -26,10 +26,10 @@ contract NFTMarketplace is ERC721URIStorage {
     * @dev Storage Variables
   */
 
-  uint256 public _tokenIds;
-  uint256 public _itemsSold;
-  uint256 public _listingPrice;
-  address payable _owner;
+  uint256 public tokenIds;
+  uint256 public itemsSold;
+  uint256 public listingPrice;
+  address payable owner;
   mapping(uint256 => Token) public idToToken;
 
 
@@ -67,8 +67,8 @@ contract NFTMarketplace is ERC721URIStorage {
   * @dev Initializes the NFT marketplace contract.
   */
   constructor() ERC721("NFTMarketPlace", "NFTM") {
-    _listingPrice = 0.1 ether;
-    _owner = payable(msg.sender);
+    listingPrice = 0.1 ether;
+    owner = payable(msg.sender);
   }
 
 
@@ -81,7 +81,7 @@ contract NFTMarketplace is ERC721URIStorage {
   */
   modifier onlyOwner() {
     require(
-      msg.sender == _owner,
+      msg.sender == owner,
       "Caller is not the marketplace owner"
     );
     _;
@@ -94,12 +94,12 @@ contract NFTMarketplace is ERC721URIStorage {
 
   /**
   * @dev Updates the listing price for creating tokens.
-  * @param listingPrice The new listing price.
+  * @param _listingPrice The new listing price.
   */
   function updateListingPrice(
-    uint256 listingPrice
+    uint256 _listingPrice
   ) external onlyOwner {
-    _listingPrice = listingPrice;
+    listingPrice = _listingPrice;
   }
 
   /**
@@ -109,7 +109,7 @@ contract NFTMarketplace is ERC721URIStorage {
   function getListingPrice() external view returns (
     uint256
   ) {
-    return _listingPrice;
+    return listingPrice;
   }
 
   /**
@@ -128,27 +128,27 @@ contract NFTMarketplace is ERC721URIStorage {
       "Price must be at least 1 wei"
     );
     require(
-      msg.value == _listingPrice,
+      msg.value == listingPrice,
       "Please send the exact listing price amount"
     );
 
-    _tokenIds += 1;
-    _mint(msg.sender, _tokenIds);
-    _setTokenURI(_tokenIds, tokenURI_);
+    tokenIds += 1;
+    _mint(msg.sender, tokenIds);
+    _setTokenURI(tokenIds, tokenURI_);
 
-    idToToken[_tokenIds] = Token(
-      _tokenIds,
+    idToToken[tokenIds] = Token(
+      tokenIds,
       payable(msg.sender),
       payable(address(this)),
       price,
       false
     );
 
-    _transfer(msg.sender, address(this), _tokenIds);
+    _transfer(msg.sender, address(this), tokenIds);
 
-    emit TokenCreated(_tokenIds, msg.sender, address(this), price);
+    emit TokenCreated(tokenIds, msg.sender, address(this), price);
 
-    return _tokenIds;
+    return tokenIds;
   }
 
   /**
@@ -169,10 +169,10 @@ contract NFTMarketplace is ERC721URIStorage {
     idToToken[tokenId].owner = payable(msg.sender);
     idToToken[tokenId].sold = true;
     idToToken[tokenId].seller = payable(address(0));
-    _itemsSold += 1;
+    itemsSold += 1;
 
     _transfer(address(this), msg.sender, tokenId);
-    payable(_owner).transfer(_listingPrice);
+    payable(owner).transfer(listingPrice);
     payable(seller).transfer(msg.value);
 
     emit TokenSold(
@@ -197,7 +197,7 @@ contract NFTMarketplace is ERC721URIStorage {
       "Only the token owner is allowed to resell it"
     );
     require(
-      msg.value == _listingPrice,
+      msg.value == listingPrice,
       "Please send the exact listing price amount"
     );
 
@@ -205,7 +205,7 @@ contract NFTMarketplace is ERC721URIStorage {
     idToToken[tokenId].price = price;
     idToToken[tokenId].seller = payable(msg.sender);
     idToToken[tokenId].owner = payable(address(this));
-    _itemsSold -= 1;
+    itemsSold -= 1;
 
     _transfer(msg.sender, address(this), tokenId);
 
@@ -223,8 +223,8 @@ contract NFTMarketplace is ERC721URIStorage {
   */
   function fetchAllUnsoldTokens() external view returns (
     Token[] memory) {
-    uint256 itemCount = _tokenIds;
-    uint256 unsoldItemCount = _tokenIds - _itemsSold;
+    uint256 itemCount = tokenIds;
+    uint256 unsoldItemCount = tokenIds - itemsSold;
     uint256 currentIndex = 0;
 
     Token[] memory items = new Token[](unsoldItemCount);
@@ -244,7 +244,7 @@ contract NFTMarketplace is ERC721URIStorage {
   */
   function fetchTokensOwnedByMe() public view returns (
     Token[] memory) {
-    uint256 totalItemCount = _tokenIds;
+    uint256 totalItemCount = tokenIds;
     uint256 itemCount = 0;
     uint256 currentIndex = 0;
 
@@ -271,7 +271,7 @@ contract NFTMarketplace is ERC721URIStorage {
   */
   function fetchMyListedTokens() public view returns (
     Token[] memory) {
-    uint256 totalItemCount = _tokenIds;
+    uint256 totalItemCount = tokenIds;
     uint256 itemCount = 0;
     uint256 currentIndex = 0;
 
